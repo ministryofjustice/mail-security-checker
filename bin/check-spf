@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 
-dig +short $1 TXT | grep -i '^"v=spf'
+dig +short "$1" TXT |
+  grep -i '^"v=spf' # Only get the SPF record(s)

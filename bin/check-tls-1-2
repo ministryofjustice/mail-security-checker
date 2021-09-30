@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 
-echo "QUIT" \ # Close the connection when it's established
-  | openssl s_client \
-      -starttls smtp \ # Connect as SMTP client
+echo "QUIT" | # Close the connection when it's established
+  openssl s_client \
+      -starttls smtp \
       -tls1_2 -crlf \
-      -quiet \ # Hide connection info
-      -connect $1:25 \
-      2>/dev/null \ # Hide more connection info
-  | tr -cd \"[:print:]\" # Strip unprintable characters
+      -quiet \
+      -connect "$1:25" \
+      2>/dev/null | # Hide more connection info
+  tr -cd "[:print:]" # Strip unprintable characters
