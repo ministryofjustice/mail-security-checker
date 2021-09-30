@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+dig +short "$1" MX |
+  sort --numeric-sort |
+  cut -d' ' -f2 | # Domain is in column 2
+  tr '[:upper:]' '[:lower:]' # Lowercase everything for consistency
