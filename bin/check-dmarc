@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+dig +short _dmarc.$1 TXT

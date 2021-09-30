@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+
+escape_quotes() {
+  echo "${1//\"/\"\"}"
+}
+
+TLS_TIMEOUT=${TLS_TIMEOUT:=2s}
+
+RED='\033[0;31m'
+RESET_COLOR='\033[0m'
+
+# Check we have `timeout` installed
+if type "timeout" &> /dev/null ; then
+  timeout_cmd="timeout"
+elif type "gtimeout" &> /dev/null ; then
+  timeout_cmd="gtimeout"
+else
+  timeout_cmd=""
+  TLS_TIMEOUT=""
+  echo "${RED}No timeout command found; using openssl's default timeout${RESET_COLOR}"
+  echo "${RED}Consider installing coreutils to install timeout${RESET_COLOR}"
+fi
+
+mx_hosts=$(get-mx-hosts $1)
+mx_hosts=(${mx_hosts[@]})
+
+tls="$($timeout_cmd $TLS_TIMEOUT check-tls-1-2 ${mx_hosts[0]})"
+
+mta=$(escape_quotes "`check-mta-sts $1`")
+spf=$(escape_quotes "`check-spf $1`")
+tlsrpt=$(escape_quotes "`check-tls-rpt $1`")
+dmarc=$(escape_quotes "`check-dmarc $1`")
+
+echo "\"${1}\",\"${mx_hosts}\",\"${tls}\",\"${tlsrpt}\",\"${spf}\",\"${dmarc}\",\"${mta}\""

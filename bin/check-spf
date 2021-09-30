@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+dig +short $1 TXT | grep -i '^"v=spf'

@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+dig +short _smtp._tls.$1 TXT

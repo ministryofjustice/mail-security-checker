@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+dig +short _mta-sts.$1 TXT
