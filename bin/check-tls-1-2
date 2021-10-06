@@ -1,10 +1,21 @@
 #!/usr/bin/env sh
 
-echo "QUIT" | # Close the connection when it's established
+openssl_response=$(echo "QUIT" | # Close the connection when it's established
   openssl s_client \
       -starttls smtp \
       -tls1_2 -crlf \
       -quiet \
       -connect "$1:25" \
-      2>/dev/null | # Hide more connection info
-  tr -cd "[:print:]" # Strip unprintable characters
+      2>/dev/null  # Hide more connection info
+)
+openssl_exit_code="$?"
+
+if [ 0 -ne "$openssl_exit_code" ]; then
+  exit "$openssl_exit_code"
+fi
+
+# Strip unprintable characters
+openssl_response=$(echo "$openssl_response" |
+  tr -cd "[:print:]"
+)
+printf '%s\nExit code: %s\n' "$openssl_response" "$openssl_exit_code"
